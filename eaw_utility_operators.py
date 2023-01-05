@@ -342,17 +342,13 @@ class EAWU_OT_RotateBones(Operator):
                 # Get Vertex Normal
                 if closestVertex != None:
                     normal = closestVertex.normal.copy()
-
-                    print("Use normal", normal, "for Bone", bone.name)
                     
                     # Define Up axis
                     tail = Vector((0,0,1))
-                    if facingAxis == "X_AXIS":
+                    if facingAxis == "X_AXIS" or facingAxis == "Z_AXIS":
                         tail = Vector((0,1,0))
                     elif facingAxis == "Y_AXIS":
                         tail = Vector((1,0,0))
-                    elif facingAxis == "Z_AXIS":
-                        tail = Vector((0,1,0))
                     
                     # Save offset to Origin
                     originOffset = -bone.head
@@ -370,12 +366,5 @@ class EAWU_OT_RotateBones(Operator):
                     # Special Case Z Axis
                     if facingAxis == "Z_AXIS": bone.roll += radians(90)
                     bone.translate(-originOffset)
-
-                    if facingAxis == "X_AXIS":
-                        print("Bone Normal", bone.x_axis)
-                    elif facingAxis == "Y_AXIS":
-                        print("Bone Normal", bone.y_axis)
-                    elif facingAxis == "Z_AXIS":
-                        print("Bone Normal", bone.z_axis)
 
         return {"FINISHED"}
