@@ -160,11 +160,12 @@ class EAWU_OT_SelectBonesRandomly(Operator):
 
                 selectedIndecies[i] = index
                 bone = armature.bones[index]
-                editBone = EditBone(editBones.get(bone.name))
-                editBone.select = True
-                editBone.select_head = True
-                editBone.select_tail = True
-                i += 1
+                if bone != None:
+                    editBone = EditBone(editBones.get(bone.name))
+                    editBone.select = True
+                    editBone.select_head = True
+                    editBone.select_tail = True
+                    i += 1
 
         return {"FINISHED"}
 
@@ -366,5 +367,52 @@ class EAWU_OT_RotateBones(Operator):
                     # Special Case Z Axis
                     if facingAxis == "Z_AXIS": bone.roll += radians(90)
                     bone.translate(-originOffset)
+
+        return {"FINISHED"}
+    
+#######################################
+# Scale by Reference:                 #
+# Scale the target by the reference   #
+#######################################
+class EAWU_OT_ScaleByReference(Operator):
+
+    bl_idname = "object.scale_by_reference"
+    bl_label = "Scale by Reference"
+    bl_description = "Scale the target mesh by the specified method"
+
+    @classmethod
+    def poll(cls, context):
+        scene = context.scene
+        properties = EAWU_Properties(scene.eaw_utility)
+
+        if properties.refModel != "" and properties.targetModel != "" and properties.refModelLength > 0 and properties.targetModelLength > 0:
+            return True
+
+        return False
+
+    def execute(self, context):
+        scene = context.scene
+        properties = EAWU_Properties(scene.eaw_utility)
+
+        # Get Properties
+        refMesh = properties.refModel
+        refLength = properties.refModelLength
+        targetMesh = properties.targetModel
+        targetLength = properties.targetModelLength
+        axis = properties.lengthAxis
+
+        # Calculate required values
+        scaleRatio = targetLength / refLength
+        refBlenderLength = getModelLength(self, context, refMesh, axis)
+        targetBlenderLength = getModelLength(self, context, targetMesh, axis)
+
+        # Scale target
+        newScale = (refBlenderLength / targetBlenderLength) * scaleRatio
+        for obj in scene.objects:
+            if obj.data.name == targetMesh:
+                obj.scale.x = newScale
+                obj.scale.y = newScale
+                obj.scale.z = newScale
+
 
         return {"FINISHED"}

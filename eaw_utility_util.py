@@ -2,7 +2,7 @@ import bpy
 
 from . eaw_utility_properties import EAWU_Properties
 
-from bpy.types import (EditBone)
+from bpy.types import (EditBone, Mesh)
 
 from typing import List
 
@@ -70,3 +70,50 @@ def lookAt(pos : Vector, target : Vector, up : Vector):
     print("Rotation:", "X", degrees(euler.x), "Y", degrees(euler.y), "Z", degrees(euler.z))
 
     return euler.to_matrix()
+
+def getModelLength(self, context, meshName, axis):
+    scene = context.scene
+    # Find correct Mesh
+    meshScale = 0
+    outer = None
+    mesh : Mesh = None
+    for obj in scene.objects:
+        if obj.data.name == meshName:
+            outer = obj
+            mesh = Mesh(outer.data)
+            if axis == "X_AXIS":
+                meshScale = outer.scale.x
+            elif axis == "Y_AXIS":
+                meshScale = outer.scale.y
+            elif axis == "Z_AXIS":
+                meshScale = outer.scale.z
+    
+    longestDistance = 0
+    # Vertices pass 1
+    for vertex in mesh.vertices:
+        vertexLoc = Vector(outer.matrix_world @ vertex.co)
+        # Get axis Value 1
+        axisValue1 = 0
+        if axis == "X_AXIS":
+            axisValue1 = vertexLoc.x
+        elif axis == "Y_AXIS":
+            axisValue1 = vertexLoc.y
+        elif axis == "Z_AXIS":
+            axisValue1 = vertexLoc.z
+
+        # Vertices pass 2
+        for vertex2 in mesh.vertices:
+            vertexLoc2 = Vector(outer.matrix_world @ vertex2.co)
+            # Get axis Value 2
+            axisValue2 = 0
+            if axis == "X_AXIS":
+                axisValue2 = vertexLoc2.x
+            elif axis == "Y_AXIS":
+                axisValue2 = vertexLoc2.y
+            elif axis == "Z_AXIS":
+                axisValue2 = vertexLoc2.z
+
+            if abs(axisValue1 - axisValue2) > longestDistance:
+                longestDistance = abs(axisValue1 - axisValue2)
+    
+    return longestDistance / meshScale

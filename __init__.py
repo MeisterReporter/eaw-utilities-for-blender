@@ -30,7 +30,8 @@ from .eaw_utility_operators import (EAWU_OT_ParentAllBones,
                                     EAWU_OT_SelectBonesRandomly, 
                                     EAWU_OT_RenameSelectedBones, 
                                     EAWU_OT_RenameByWeight, 
-                                    EAWU_OT_RotateBones)
+                                    EAWU_OT_RotateBones,
+                                    EAWU_OT_ScaleByReference)
 from .ui.eaw_utility_panel import EAWU_PT_Panel
 from .ui.eaw_utility_weightlist import (EAWU_UL_WeightList, 
                                         EAWU_OT_WeightList_NewItem, 
@@ -51,7 +52,8 @@ classes = (EAWU_OT_ParentAllBones,
             EAWU_OT_WeightList_MoveItemUp,
             EAWU_OT_WeightList_MoveItemDown,
             EAWU_OT_RenameByWeight,
-            EAWU_OT_RotateBones)
+            EAWU_OT_RotateBones,
+            EAWU_OT_ScaleByReference)
 
 def register():
     # Classes

@@ -301,6 +301,55 @@ class EAWU_PT_Panel(Panel):
             else:
                 name = "Select an Armature"
             row.operator("object.rotate_bones", text=name)
+        elif utilityProperty == "SCALE_CORRECT":
+            ###########################
+            # Scale the model correct #
+            ###########################
+
+            # Reference Model Scale
+            row = layout.row()
+            row.label(text="Reference Model Length:")
+            row.prop(properties, "refModelLength")
+            row = layout.row()
+
+            row = layout.row()
+            row.label(text="Reference Model:")
+            row.prop_search(properties, "refModel", bpy.data, "meshes")
+            row = layout.row()
+
+            # Target Model Scale
+            row = layout.row()
+            row.label(text="Traget Model Length:")
+            row.prop(properties, "targetModelLength")
+            row = layout.row()
+
+            row = layout.row()
+            row.label(text="Target Model:")
+            row.prop_search(properties, "targetModel", bpy.data, "meshes")
+            row = layout.row()
+
+            # Length Axis
+            row = layout.row()
+            row.prop(properties, "lengthAxis")
+            row = layout.row()
+
+            row = layout.row()
+            row.label(text="It is important to APPLY THE SCALE of the target model before you use this method.")
+            row = layout.row()
+
+            # Button Operator
+            row = layout.row()
+            # Button name based on the neccessary conditions
+            name = "Scale by Reference"
+            if properties.refModel == "":
+                name = "Select a target mesh"
+            elif properties.targetModel == "":
+                name = "Select a reference mesh"
+            elif properties.refModelLength == 0:
+                name = "The reference length can not be 0"
+            elif properties.targetModelLength == 0:
+                name = "The target length can not be 0"
+            row.operator("object.scale_by_reference", text=name)
 
     def calculateRenamePreview(self, context, properties : EAWU_Properties, bone = None):
         selectedBones = context.selected_bones

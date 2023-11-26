@@ -40,7 +40,8 @@ class EAWU_Properties(PropertyGroup):
                 ("RANDOM_BONES", "Select Bones Randomly", "Select Bones of the active Armature randomly", "", 1),
                 ("RENAME_BONES", "Rename Bones", "Rename all selected bones", "", 2),
                 ("RENAME_BONES_BY_LIST", "Rename Bones by Weightlist", "Rename all selected bones using a Weightlist", "", 3),
-                ("ROTATE_BONES", "Rotate Bones", "Rotate all selected bones is specific direction", "", 4)
+                ("ROTATE_BONES", "Rotate Bones", "Rotate all selected bones is specific direction", "", 4),
+                ("SCALE_CORRECT", "Scale by Reference", "Scale a target model by a reference model with lengths", "", 5)
             ]
 
     # General Properties
@@ -384,4 +385,39 @@ class EAWU_Properties(PropertyGroup):
         description = "The Mesh from which the normal directions should be taken. The names listed here are mesh names, these names can be found by expanding" + 
                       " the mesh objects in the outliner. The name next to the green triangle is the mesh name",
         default = "",
+    )
+
+    # Scale by Reference Properties
+
+    refModelLength : FloatProperty(
+        name = "",
+        description = "The length of the reference model",
+        default = 1,
+        min = 0,
+    )
+
+    refModel : StringProperty(
+        name = "",
+        description = "The reference model, will be used to calculate the length of it self and then the ratio.",
+        default = "",
+    )
+
+    targetModelLength : FloatProperty(
+        name = "",
+        description = "The length of the target model",
+        default = 1,
+        min = 0,
+    )
+
+    targetModel : StringProperty(
+        name = "",
+        description = "The target model, will be used to calculate the length of it self and then the ratio to the desired length.",
+        default = "",
+    )
+
+    lengthAxis : EnumProperty(
+        name = "Length Axis",
+        description = "The axis on which the length should be measured",
+        items = axis,
+        default = "Y_AXIS",
     )
